@@ -32,10 +32,10 @@ def read_file(file_name):
 
 def write_file(unique_names,file_name):
 	fw=open(file_name,"w")
-	for entry in file_name:
-		fw.write(entry);
-	# fw.close();
-
+	writer=csv.DictWriter(fw,fieldnames=['fn','ln','gn','dob']);
+	writer.writeheader();
+	for entry in unique_names:
+		writer.writerow(entry)
 
 
 dataset=read_file(data.training_file)
@@ -99,7 +99,6 @@ while flag :
 print("\nOPTIMUM THRESHOLD FOUND...")
 print("SYSTEM TRAINED")
 print("OPTIMUM THRESHOLD = ",optimum_threshold)
-print()
 
 
 print("\nTESTING...",end="")
