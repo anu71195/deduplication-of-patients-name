@@ -27,8 +27,14 @@ def read_file(file_name):
 	dataset=[];
 	for row in text:
 		dataset.append(row);
+	fp.close();
 	return dataset;
 
+def write_file(unique_names,file_name):
+	fw=open(file_name,"w")
+	for entry in file_name:
+		fw.write(entry);
+	# fw.close();
 
 
 
@@ -38,7 +44,8 @@ cost_distance=math.inf;
 m=len(dataset);#m=number of training examples
 threshold=-1;
 flag=1;
-print("TRAINING...")
+print("TRAINING DATA TAKEN FROM",data.training_file,"FILE")
+print("TRAINING...\n")
 while flag :
 	threshold+=1;
 	counter=0;
@@ -89,12 +96,13 @@ while flag :
 		flag=0;
 	print(len(unique_names),"----",threshold);
 
-print("\nOPTIMUM THRESHOLD FOUND....")
+print("\nOPTIMUM THRESHOLD FOUND...")
+print("SYSTEM TRAINED")
 print("OPTIMUM THRESHOLD = ",optimum_threshold)
 print()
 
 
-#testing
+print("\nTESTING...",end="")
 dataset=read_file(data.testing_file)
 threshold=optimum_threshold;
 counter=0;
@@ -136,6 +144,9 @@ for rows in labels:
 	if counter<=rows[1]:
 		unique_names.append(dataset[rows[0]]);
 		counter=rows[1]+1;
-
-print(len(unique_names),"----",threshold);
+print("DONE")
+print("GENERATING OUTPUT IN ",data.output_file,"FILE...",end="")
+write_file(unique_names,data.output_file);
+print("DONE")
+# print(len(unique_names),"----",threshold);
 # print(unique_names)
