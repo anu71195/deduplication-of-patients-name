@@ -147,5 +147,3 @@ print("DONE")
 print("GENERATING OUTPUT IN ",data.output_file,"FILE...",end="")
 write_file(unique_names,data.output_file);
 print("DONE")
-# print(len(unique_names),"----",threshold);
-# print(unique_names)
