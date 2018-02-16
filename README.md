@@ -25,7 +25,7 @@ $ sudo apt-get install python3.6
 # RUNNING THE CODE:
 code can be run from linux terminal with command 
 ```
-	$ python3 deduplication.py 
+$ python3 deduplication.py 
 ```
 The required files for it are training_data.csv, input.csv. 
 With each training example having attribute first name, last name, dob, gender.
