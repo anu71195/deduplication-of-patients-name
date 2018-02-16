@@ -1,5 +1,6 @@
 import csv
 import math
+import data
 
 def levenstein(str1,str2):
 	m=len(str1)
@@ -18,14 +19,28 @@ def levenstein(str1,str2):
 	return dp[m][n];
 
 
-fp=open("training_data.csv","r");
-text=(csv.DictReader(fp));
-count_unique_training=42;
-dataset=[];
-for row in text:
-	dataset.append(row);
+
+
+def read_file(file_name):
+	fp=open(file_name,"r");
+	text=(csv.DictReader(fp));
+	dataset=[];
+	for row in text:
+		dataset.append(row);
+	return dataset;
+
+
+
+
+dataset=read_file(data.training_file)
+count_unique_training=data.count_unique_training;
+cost_distance=math.inf;
 m=len(dataset);#m=number of training examples
-for threshold in range(10):
+threshold=-1;
+flag=1;
+print("TRAINING...")
+while flag :
+	threshold+=1;
 	counter=0;
 	dob_weight=threshold;
 	gender_weight=threshold*2;
@@ -33,17 +48,12 @@ for threshold in range(10):
 	labels={};
 	for i in range(m):
 		labels[i]=-1;
-	train_data=dataset[0:math.floor(7*m/10)];
-	validation_data=dataset[math.ceil(7*m/10):];
-
 	for i in range(len(dataset)):
 		for j in range(len(dataset)):
 			costfn=levenstein(dataset[i]['fn'],dataset[j]['fn'])
 			costln=levenstein(dataset[i]['ln'],dataset[j]['ln'])
-			dobcost=dataset[i]['dob']!=dataset[j]['dob']
-			gendercost=dataset[i]['gn']!=dataset[j]['gn']
-			dobcost*=dob_weight;
-			gendercost*=gender_weight;
+			dobcost=(dataset[i]['dob']!=dataset[j]['dob'])*dob_weight
+			gendercost=(dataset[i]['gn']!=dataset[j]['gn'])*gender_weight
 			if(costfn+costln+dobcost+gendercost<threshold):
 				if labels[j]==-1 and labels[i]==-1:
 					labels[j]=counter;
@@ -57,8 +67,6 @@ for threshold in range(10):
 					else :
 						labels[i]=min(labels[i],labels[j]);
 						labels[j]=labels[i]
-
-
 			else:
 				if labels[i]==-1:
 					labels[i]=counter;
@@ -72,6 +80,62 @@ for threshold in range(10):
 		if counter<=rows[1]:
 			unique_names.append(dataset[rows[0]]);
 			counter=rows[1]+1;
-	if threshold==5:
-		print(unique_names)
+	
+	if cost_distance> abs(len(unique_names)-count_unique_training):
+		cost_distance=abs(len(unique_names)-count_unique_training);
+		optimum_threshold=threshold;
+		flag=1;
+	else: 
+		flag=0;
+	print(len(unique_names),"----",threshold);
 
+print("\nOPTIMUM THRESHOLD FOUND....")
+print("OPTIMUM THRESHOLD = ",optimum_threshold)
+print()
+
+
+#testing
+dataset=read_file(data.testing_file)
+threshold=optimum_threshold;
+counter=0;
+dob_weight=threshold;
+gender_weight=threshold*2;
+unique_names=[];
+labels={};
+for i in range(m):
+	labels[i]=-1;
+for i in range(len(dataset)):
+	for j in range(len(dataset)):
+		costfn=levenstein(dataset[i]['fn'],dataset[j]['fn'])
+		costln=levenstein(dataset[i]['ln'],dataset[j]['ln'])
+		dobcost=(dataset[i]['dob']!=dataset[j]['dob'])*dob_weight
+		gendercost=(dataset[i]['gn']!=dataset[j]['gn'])*gender_weight
+		if(costfn+costln+dobcost+gendercost<threshold):
+			if labels[j]==-1 and labels[i]==-1:
+				labels[j]=counter;
+				counter+=1;
+				labels[i]=labels[j]
+			else :
+				if labels[j]==-1:
+					labels[j]=labels[i];
+				elif labels[i]==-1:
+					labels[i]=labels[j]
+				else :
+					labels[i]=min(labels[i],labels[j]);
+					labels[j]=labels[i]
+		else:
+			if labels[i]==-1:
+				labels[i]=counter;
+				counter+=1;
+			if labels[j]==-1:
+				labels[j]=counter;
+				counter+=1;
+labels=sorted(labels.items(),key=lambda k:k[1])
+counter=0;
+for rows in labels:
+	if counter<=rows[1]:
+		unique_names.append(dataset[rows[0]]);
+		counter=rows[1]+1;
+
+print(len(unique_names),"----",threshold);
+# print(unique_names)
