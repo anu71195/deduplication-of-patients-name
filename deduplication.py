@@ -141,10 +141,27 @@ for i in range(len(dataset)):
 				counter+=1;
 labels=sorted(labels.items(),key=lambda k:k[1])
 counter=0;
+label_counter=0;
+temp_labels={};
+temp=-1;
 for rows in labels:
+	if temp==rows[1]:
+		temp_labels[rows[0]]=label_counter;
+	else :
+		label_counter+=1;
+		temp_labels[rows[0]]=label_counter;
+	temp=rows[1];		
 	if counter<=rows[1]:
 		unique_names.append(dataset[rows[0]]);
 		counter=rows[1]+1;
+		# print(unique_names)
+y_labels=[0 for _ in range(m)]
+for rows in temp_labels:
+	y_labels[rows]=temp_labels[rows]
+	# print(rows)
+
+# print(labels)
+# print(y_labels)
 print("DONE")
 print("GENERATING OUTPUT IN ",data.output_file,"FILE...",end="")
 write_file(unique_names,data.output_file);
