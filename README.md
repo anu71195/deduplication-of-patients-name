@@ -27,11 +27,11 @@ code can be run from linux terminal with command
 ```
 $ python3 deduplication.py 
 ```
-The required files for it are training_data.csv, input.csv. 
-With each training example having attribute first name, last name, dob, gender.
-The output will be generated in output.csv.
-These names can be changed from data.py
-The output will be the number of unique patients from the input given. 
+The required files for it are training_data.csv, input.csv. <br />
+With each training example having attribute first name, last name, dob, gender.<br />
+The output will be generated in output.csv.<br />
+These names can be changed from data.py<br />
+The output will be the number of unique patients from the input given. <br />
 
 # AUTHOR:
 	Anurag Ramteke
